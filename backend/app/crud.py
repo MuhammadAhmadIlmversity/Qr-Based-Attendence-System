@@ -87,3 +87,23 @@ def get_all_attendance(db: Session):
         models.Attendance.check_in_time.desc()
     ).all()
 
+# ------------------ AccessMapping ------------------ #
+
+def create_access_mapping(db: Session, mapping: schemas.AccessMappingCreate):
+    new_mapping = models.AccessMapping(
+        emp_id=mapping.emp_id,
+        door_id=mapping.door_id
+    )
+    db.add(new_mapping)
+    db.commit()
+    db.refresh(new_mapping)
+    return new_mapping
+
+def get_employee_access_doors(db: Session, emp_id: str):
+    return db.query(models.AccessMapping).filter(models.AccessMapping.emp_id == emp_id).all()
+
+def is_employee_authorized_for_door(db: Session, emp_id: str, door_id: str):
+    return db.query(models.AccessMapping).filter(
+        models.AccessMapping.emp_id == emp_id,
+        models.AccessMapping.door_id == door_id
+    ).first() is not None

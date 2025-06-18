@@ -59,3 +59,18 @@ class AttendanceOut(BaseModel):
 class AttendanceCreate(BaseModel):
     emp_id: str
     device_id: str
+
+# ------------------ AccessMapping ------------------ #
+
+class AccessMappingBase(BaseModel):
+    emp_id: str
+    door_id: str
+
+class AccessMappingCreate(AccessMappingBase):
+    pass
+
+class AccessMappingResponse(AccessMappingBase):
+    id: int
+
+    class Config:
+        orm_mode = True

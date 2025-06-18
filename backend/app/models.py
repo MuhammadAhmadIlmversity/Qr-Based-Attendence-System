@@ -25,3 +25,12 @@ class Device(Base):
     device_id = Column(String, primary_key=True, index=True)
     location = Column(String, nullable=True)  # Stores IP address or geolocation
     door_id = Column(String, nullable=False)
+
+class AccessMapping(Base):
+    __tablename__ = "access_mappings"
+    
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    emp_id = Column(String, ForeignKey("employees.emp_id"))
+    door_id = Column(String)
+
+    employee = relationship("Employee", backref="access_mappings")

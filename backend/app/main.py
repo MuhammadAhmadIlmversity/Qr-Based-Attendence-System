@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import uvicorn
 
-from app.routes import employee, auth, qr, attendance, device  # Make sure attendance route is imported
+from app.routes import employee, auth, qr, attendance, device, access
 from app.models import Base
 from app.database import engine
 
@@ -17,6 +17,7 @@ app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(qr.router, prefix="/qr", tags=["QR"])
 app.include_router(attendance.router, prefix="/attendance", tags=["Attendance"])  # NEW
 app.include_router(device.router, prefix="/devices", tags=["Devices"])
+app.include_router(access.router, prefix="/access", tags=["Access"])  # ← add this line
 
 # Run the app
 if __name__ == "__main__":
