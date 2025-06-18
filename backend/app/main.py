@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from app.routes import employee, auth, qr, attendance, device, access
@@ -10,6 +11,19 @@ Base.metadata.create_all(bind=engine)
 
 # Initialize FastAPI app
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",  # React frontend
+    # Add production URL here later if needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,              # Allows requests from frontend
+    allow_credentials=True,
+    allow_methods=["*"],                # Allows all HTTP methods
+    allow_headers=["*"],                # Allows all headers
+)
 
 # Include routers
 app.include_router(employee.router, prefix="/employee", tags=["Employee"])

@@ -6,6 +6,7 @@ from app.database import SessionLocal
 from app import crud, models
 
 
+
 router = APIRouter()
 
 @router.get("/current")

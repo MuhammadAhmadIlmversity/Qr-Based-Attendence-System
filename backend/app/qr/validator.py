@@ -11,7 +11,7 @@ def validate_token(token: str) -> str | None:
         timestamp = int(timestamp)
 
         # Token must be within last 30s
-        current = int(time.time() // 30)
+        current = int(time.time() // 60)
         if abs(current - timestamp) > 1:
             return None
 

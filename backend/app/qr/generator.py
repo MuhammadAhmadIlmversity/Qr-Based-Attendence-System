@@ -9,7 +9,7 @@ import os
 SECRET_KEY = os.getenv("QR_SECRET_KEY", "defaultsecret")
 
 def generate_token(employee_id: str) -> str:
-    timestamp = int(time.time() // 30)  # 30-second intervals
+    timestamp = int(time.time() // 60)  # 30-second intervals
     message = f"{employee_id}:{timestamp}"
     signature = hmac.new(SECRET_KEY.encode(), message.encode(), hashlib.sha256).hexdigest()
     return f"{employee_id}:{timestamp}:{signature}"
