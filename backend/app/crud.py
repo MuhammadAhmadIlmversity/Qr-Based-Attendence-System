@@ -107,3 +107,14 @@ def is_employee_authorized_for_door(db: Session, emp_id: str, door_id: str):
         models.AccessMapping.emp_id == emp_id,
         models.AccessMapping.door_id == door_id
     ).first() is not None
+
+from datetime import timedelta
+
+def is_locked_out(db: Session, emp_id: str) -> bool:
+    ten_min_ago = datetime.utcnow() - timedelta(minutes=10)
+    recent_attempt = db.query(models.Attendance).filter(
+        models.Attendance.emp_id == emp_id,
+        models.Attendance.check_in_time != None,
+        models.Attendance.check_in_time >= ten_min_ago
+    ).first()
+    return bool(recent_attempt)

@@ -10,7 +10,6 @@ export default function ScannerPage() {
     const [useCamera, setUseCamera] = useState(false);
     const fileInputRef = useRef(null);
 
-    // Prevent browser from opening image when dropped on window
     useEffect(() => {
         const preventDefaults = (e) => {
             e.preventDefault();

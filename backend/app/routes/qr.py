@@ -4,10 +4,11 @@ from app.qr.validator import validate_token
 from app.crud import is_employee_authorized_for_door
 from app.database import SessionLocal
 from app import crud, models
-
-
+from datetime import datetime, time, timedelta
 
 router = APIRouter()
+
+
 
 @router.get("/current")
 def get_qr_image(emp_id: str):
@@ -39,8 +40,17 @@ def scan_qr(token: str, device_id: str, door_id: str, request: Request):
         if not authorized:
             raise HTTPException(status_code=403, detail="Unauthorized door access")
 
-        # 3. Decide Automatically: Check-in or Check-out
-        from datetime import datetime, time
+        # 3. Enforce 10-minute lockout
+        ten_minutes_ago = datetime.utcnow() - timedelta(minutes=10)
+        recent_attempt = db.query(models.Attendance).filter(
+            models.Attendance.emp_id == emp_id,
+            models.Attendance.check_in_time != None,
+            models.Attendance.check_in_time >= ten_minutes_ago
+        ).first()
+        if recent_attempt:
+            raise HTTPException(status_code=403, detail="Too many attempts. Please wait 10 minutes.")
+
+        # 4. Decide Automatically: Check-in or Check-out
         now = datetime.utcnow().time()
         if now < time(19, 0):  # before 7 PM → Check-in
             success, message = crud.record_check_in(db, emp_id, device_id)
